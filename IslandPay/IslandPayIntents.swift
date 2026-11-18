@@ -62,10 +62,10 @@ enum IslandIntentError: Swift.Error, CustomLocalizedStringResourceConvertible {
 struct IslandPayShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(intent: StartIslandIntent(), phrases: [
-            "用岛付启动灵动岛",
+            "用${applicationName}启动灵动岛",
         ])
         AppShortcut(intent: StopIslandIntent(), phrases: [
-            "用岛付停止灵动岛",
+            "用${applicationName}停止灵动岛",
         ])
     }
 }
