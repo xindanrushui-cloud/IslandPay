@@ -1,5 +1,4 @@
 import ActivityKit
-import AppIntents
 import SwiftUI
 import WidgetKit
 
@@ -48,13 +47,14 @@ struct IslandPayWidget: Widget {
                     Image(systemName: "qrcode")
                         .foregroundStyle(.green)
                 }
-                // 展开视图下半部分：两个可点按钮
-                // iOS 17+ 实时活动内可交互按钮：Button(intent:) + 系统 OpenURLIntent，
-                // 系统收到 Intent 后打开对应 URL（微信 Scheme），扩展进程本身不直接开链接。
+                // 展开视图下半部分：两个可点链接
+                // Link 在实时活动里点按即打开对应 URL（微信 Scheme）。
+                // 注：不要用 Button(intent: OpenURLIntent(...))，OpenURLIntent
+                // 在应用扩展里要求 iOS 18+，本工程最低部署目标是 iOS 17。
                 DynamicIslandExpandedRegion(.bottom) {
                     HStack(spacing: 12) {
                         // ① 微信付款码
-                        Button(intent: OpenURLIntent(weChatPayURL)) {
+                        Link(destination: weChatPayURL) {
                             HStack(spacing: 8) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 8)
@@ -67,15 +67,15 @@ struct IslandPayWidget: Widget {
                                 Text("微信支付")
                                     .font(.subheadline.weight(.semibold))
                             }
+                            .foregroundStyle(.primary)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
                             .background(Color.green.opacity(0.15))
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
-                        .buttonStyle(.plain)
 
                         // ② 微信扫一扫
-                        Button(intent: OpenURLIntent(weChatScanURL)) {
+                        Link(destination: weChatScanURL) {
                             HStack(spacing: 8) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 8)
@@ -88,12 +88,12 @@ struct IslandPayWidget: Widget {
                                 Text("扫一扫")
                                     .font(.subheadline.weight(.semibold))
                             }
+                            .foregroundStyle(.primary)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
                             .background(Color.green.opacity(0.15))
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
-                        .buttonStyle(.plain)
                     }
                 }
             } compactLeading: {
