@@ -16,12 +16,12 @@ jobs:
         run: xcodebuild -version
 
       # 无签名编译：产物是没有签名的 .app，后续用 SideStore / AltStore 自签安装。
-      # -target IslandPay 会连同依赖的 Widget Extension 一起编。
+      # -scheme 需要共享 scheme 文件（IslandPay.xcodeproj/xcshareddata/xcschemes/）。
       - name: Build (unsigned)
         run: |
           xcodebuild \
             -project IslandPay.xcodeproj \
-            -target IslandPay \
+            -scheme IslandPay \
             -configuration Release \
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
