@@ -1,0 +1,44 @@
+name: Build IslandPay
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      # 无签名编译：产物是没有签名的 .app，后续用 SideStore / AltStore 自签安装。
+      # -target IslandPay 会连同依赖的 Widget Extension 一起编。
+      - name: Build (unsigned)
+        run: |
+          xcodebuild \
+            -project IslandPay.xcodeproj \
+            -target IslandPay \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -R "build/Build/Products/Release-iphoneos/IslandPay.app" Payload/
+          zip -r IslandPay.ipa Payload
+          ls -lh IslandPay.ipa
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: IslandPay-unsigned-ipa
+          path: IslandPay.ipa
+          if-no-files-found: error
