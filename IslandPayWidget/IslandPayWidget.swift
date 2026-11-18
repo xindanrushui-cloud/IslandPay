@@ -1,4 +1,5 @@
 import ActivityKit
+import AppIntents
 import SwiftUI
 import WidgetKit
 
@@ -47,14 +48,15 @@ struct IslandPayWidget: Widget {
                     Image(systemName: "qrcode")
                         .foregroundStyle(.green)
                 }
-                // 展开视图下半部分：两个可点链接
-                // Link 在实时活动里点按即打开对应 URL（微信 Scheme）。
-                // 注：不要用 Button(intent: OpenURLIntent(...))，OpenURLIntent
-                // 在应用扩展里要求 iOS 18+，本工程最低部署目标是 iOS 17。
+                // 展开视图下半部分：两个跳转按钮。
+                // 必须用 Button(intent: OpenURLIntent(...))：实测 Link(destination:)
+                // 在实时活动里对微信自定义 Scheme 不生效，点按会落到整个岛上、
+                // 跳回 App。OpenURLIntent 在应用扩展里要求 iOS 18+，
+                // 本工程最低部署目标已提到 iOS 18.0。
                 DynamicIslandExpandedRegion(.bottom) {
                     HStack(spacing: 12) {
                         // ① 微信付款码
-                        Link(destination: weChatPayURL) {
+                        Button(intent: OpenURLIntent(url: weChatPayURL)) {
                             HStack(spacing: 8) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 8)
@@ -73,9 +75,10 @@ struct IslandPayWidget: Widget {
                             .background(Color.green.opacity(0.15))
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
+                        .buttonStyle(.plain)
 
                         // ② 微信扫一扫
-                        Link(destination: weChatScanURL) {
+                        Button(intent: OpenURLIntent(url: weChatScanURL)) {
                             HStack(spacing: 8) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 8)
@@ -94,6 +97,7 @@ struct IslandPayWidget: Widget {
                             .background(Color.green.opacity(0.15))
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
+                        .buttonStyle(.plain)
                     }
                 }
             } compactLeading: {
