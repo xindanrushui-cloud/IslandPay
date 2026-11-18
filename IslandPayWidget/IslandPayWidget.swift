@@ -56,7 +56,7 @@ struct IslandPayWidget: Widget {
                 DynamicIslandExpandedRegion(.bottom) {
                     HStack(spacing: 12) {
                         // ① 微信付款码
-                        Button(intent: OpenURLIntent(url: weChatPayURL)) {
+                        Button(intent: OpenURLIntent(weChatPayURL)) {
                             HStack(spacing: 8) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 8)
@@ -78,7 +78,7 @@ struct IslandPayWidget: Widget {
                         .buttonStyle(.plain)
 
                         // ② 微信扫一扫
-                        Button(intent: OpenURLIntent(url: weChatScanURL)) {
+                        Button(intent: OpenURLIntent(weChatScanURL)) {
                             HStack(spacing: 8) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 8)
